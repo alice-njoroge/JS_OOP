@@ -1,16 +1,27 @@
 //variables
-const productsDom =  document.querySelector('.products-center');
+const productsDom = document.querySelector('.products-center');
 
 // products display
 class Products {
     async getProducts() {
-        try{
-            let result = await  fetch('products.json');
-            let products = await result.json();
+        try {
+            let result = await fetch('products.json');
+            return await result.json();
 
-            let productsHtmlString = '';
-            products.map((product) => {
-                let productString = `
+        } catch (e) {
+            console.log(e);
+        }
+
+
+    }
+
+}
+
+class UI {
+    displayProducts(products) {
+        let productsHtmlString = '';
+        products.map((product) => {
+            let productString = `
         <article class="product">
             <div class="img-container">
                 <img src="${product.image}" alt="${product.title}" class="product-img">
@@ -19,18 +30,15 @@ class Products {
             <h3>${product.title}</h3>
             <h4>$${product.price}</h4>
         </article>`;
-                productsHtmlString += productString;
-            });
-            productsDom.innerHTML= productsHtmlString;
+            productsHtmlString += productString;
+        });
+        productsDom.innerHTML = productsHtmlString;
 
-        } catch (e) {
-            console.log(e);
-        }
 
     }
-
-
 }
 
-const products = new Products();
-products.getProducts();
+const productsObj = new Products();
+const ui = new UI;
+productsObj.getProducts().then(products => ui.displayProducts(products));
+
