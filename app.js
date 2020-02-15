@@ -53,11 +53,13 @@ class Cart {
         let cartItems = localStorage.getItem('cartItems');
         if (cartItems) {
             this.cartItems = JSON.parse(cartItems);
-
         }
-        this.cartItems.push(product);
-        localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
 
+       if (!this.cartItems.find(item =>item.id === product.id)){
+           this.cartItems.push(product);
+           localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+
+       }
 
     }
 
