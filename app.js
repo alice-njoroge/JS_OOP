@@ -1,5 +1,6 @@
 //variables
 const productsDom = document.querySelector('.products-center');
+const cartDom = document.querySelector('.cart-content');
 
 
 // products class get them from json and display them on the UI
@@ -46,6 +47,7 @@ class Cart {
                 let product = products.find(product => product.id === productId);
                 this.putProductInStorage(product);
                 this.openCart();
+                this.cartUI();
 
             });
         });
@@ -65,13 +67,14 @@ class Cart {
 
     }
 
-    /*cartUI() {
+    cartUI() {
         let cartItems = localStorage.getItem('cartItems');
         this.cartItems = JSON.parse(cartItems);
+        console.log(this.cartItems);
 
         let htmlCartString = '';
-        let cartString = this.cartItems.map(product => {
-            `<div class="cart-item">
+        this.cartItems.map(product => {
+            htmlCartString += `<div class="cart-item">
             <img src="${product.image}" alt="${product.title}">
             <div>
             <h4>${product.title} </h4>
@@ -84,16 +87,30 @@ class Cart {
             <i class="fas fa-chevron-down"></i>
             </div>
             </div>`;
-            htmlCartString += cartString;
-        })
+        });
+        cartDom.innerHTML = htmlCartString;
 
-    } */
-
-    openCart() {
-            document.querySelector('.cart').classList.add('showCart');
-            document.querySelector('.cart-overlay').classList.add('transparentBcg');
     }
 
+    openCart() {
+        document.querySelector('.cart').classList.add('showCart');
+        document.querySelector('.cart-overlay').classList.add('transparentBcg');
+    }
+
+    closeCart() {
+        document.querySelector('.cart').classList.remove('showCart');
+        document.querySelector('.cart-overlay').classList.remove('transparentBcg');
+    }
+
+    cartOverlay() {
+        document.querySelector('.cart-overlay').addEventListener('click', event => {
+            if (event.target.classList.contains('cart-overlay') || event.target.classList.contains('fa-window-close')) {
+                this.closeCart();
+            }
+
+        });
+
+    }
 }
 
 const productsObj = new Products();
@@ -101,7 +118,7 @@ const cart = new Cart();
 productsObj.getProducts().then(products => {
     productsObj.displayProducts(products);
     cart.bagButtons(products);
-
+    cart.cartOverlay();
 
 });
 
