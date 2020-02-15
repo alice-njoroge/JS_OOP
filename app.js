@@ -2,7 +2,6 @@
 const productsDom = document.querySelector('.products-center');
 
 
-
 // products class get them from json and display them on the UI
 class Products {
     async getProducts() {
@@ -37,25 +36,38 @@ class Products {
 }
 
 class Cart {
+    cartItems = [];
 
     bagButtons(products) {
         let bagButtons = document.querySelectorAll('.bag-btn');
-        bagButtons.forEach((button) =>{
-            button.addEventListener('click', event=>{
+        bagButtons.forEach((button) => {
+            button.addEventListener('click', event => {
                 let productId = event.target.dataset.id;
                 let product = products.find(product => product.id === productId);
+                this.putProductInStorage(product);
             });
-        } );
+        });
+    }
+
+    putProductInStorage(product) {
+        let cartItems = localStorage.getItem('cartItems');
+        if (cartItems) {
+            this.cartItems = JSON.parse(cartItems);
+
+        }
+        this.cartItems.push(product);
+        localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+
 
     }
 
 }
 
-
 const productsObj = new Products();
 const cart = new Cart();
 productsObj.getProducts().then(products => {
     productsObj.displayProducts(products);
+    cart.bagButtons(products);
 });
 
 
