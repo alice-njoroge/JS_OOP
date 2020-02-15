@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Comfy House</title>
+    <!--font Awesome-->
+    <script
+            src="https://kit.fontawesome.com/587d8abee0.js"
+            crossorigin="anonymous"
+    ></script>
+    <!--custom css-->
+    <link rel="stylesheet" href="main.css"/>
+</head>
+
+<body>
+<!--navbar-->
+<div id="main-content">
+<nav class="navbar">
+    <div class="navbar-center">
+        <span class="nav-icon">
+          <i class="fas fa-bars"></i>
+        </span>
+        <img src="./images/logo.svg"/>
+        <div class="cart-btn">
+          <span class="nav-icon">
+            <i class="fas fa-shopping-cart"></i>
+            <div class="cart-items">0</div>
+          </span>
+        </div>
+    </div>
+</nav>
+    <!--end of navbar-->
+
+    <!--Hero-->
+<header class="hero">
+    <div class="banner">
+        <h1 class="banner-title">furniture collection</h1>
+        <button class="banner-btn shop-now">shop now</button>
+    </div>
+</header>
+    <!--end of Hero-->
+    <!-- products -->
+<section class="products">
+    <div class="section-title">
+        <h2 data-id="prod">Our Products</h2>
+    </div>
+    <div class="products-center">
+        <!-- single product -->
+
+        <!-- end of single product -->
+
+    </div>
+</section>
+    </div>
+<!-- end of products -->
+<!-- cart -->
+<div class="cart-overlay">
+    <div class="cart">
+        <span class="close-cart">
+          <i class="fas fa-window-close"></i>
+        </span>
+        <h2>My Cart</h2>
+        <div class="cart-content">
+            <!-- cart item -->
+
+            <!-- end of cart item -->
+        </div>
+        <div class="cart-footer">
+            <h3>Grand Total: $ <span class="cart-total">0</span></h3>
+            <h3>Discounted Grand Total: $ <span class="grand-cart-total">0</span></h3>
+            <div class="buttons">
+                <button class="close-cart banner-btn clear-cart">Clear cart</button>
+                <button class="banner-btn">Checkout</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end of cart -->
+<script defer src="app.js"></script>
+</body>
+</html>
