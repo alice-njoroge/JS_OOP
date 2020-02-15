@@ -215,7 +215,7 @@ body {
 }
 
 .showCart {
-    transform: translateX(0);
+    transform: translateY(0);
 }
 
 .transparentBcg {
