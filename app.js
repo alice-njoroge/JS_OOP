@@ -53,6 +53,7 @@ class Cart {
                 this.putProductInStorage(product);
                 this.openCart();
                 this.cartUI();
+                this.grandTotals()
 
             });
         });
@@ -125,6 +126,7 @@ class Cart {
             if (event.target.classList.contains('clear-cart')) {
                 localStorage.removeItem("cartItems");
                 cartArrLength.innerText = 0;
+                this.grandTotals();
                 this.cartUI();
             }
             if (event.target.classList.contains('fa-chevron-up')) {
@@ -153,6 +155,8 @@ class Cart {
             this.cartItems = JSON.parse(cartItems);
             cartArrLength.innerText = this.cartItems.length;
             this.cartUI();
+            this.grandTotals();
+
         }
     }
 
@@ -170,6 +174,7 @@ class Cart {
                 localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
                 cartArrLength.innerText = this.cartItems.length;
             }
+            this.grandTotals();
             this.cartUI();
         }
 
@@ -184,6 +189,7 @@ class Cart {
             this.cartItems[index].quantity += 1;
             localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
             this.productTotal(productId);
+            this.grandTotals();
             this.cartUI();
 
         }
@@ -200,8 +206,8 @@ class Cart {
                 this.cartItems[index].quantity -= 1;
                 localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
                 this.productTotal(productId);
+                this.grandTotals();
                 this.cartUI();
-
             }
         }
 
@@ -220,6 +226,24 @@ class Cart {
         }
 
     }
+
+    grandTotals() {
+        let grandTotal = 0;
+        let cartItems = localStorage.getItem('cartItems');
+        if (cartItems) {
+            this.cartItems = JSON.parse(cartItems);
+            this.cartItems.forEach(product => {
+                grandTotal += product.total;
+            });
+        }
+        else{
+             grandTotal = 0;
+
+        }
+        document.querySelector('.cart-total').innerText = grandTotal;
+
+    }
+
 
 } // end of cart class
 
