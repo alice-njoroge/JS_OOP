@@ -126,7 +126,14 @@ class Cart {
        if (cartItems){
            this.cartItems = JSON.parse(cartItems);
            cartArrLength.innerText = this.cartItems.length;
+           cartArrLength.addEventListener('click', event=>{
+               this.openCart();
+           })
+
        }
+    }
+    removeCartItem(){
+
     }
 } // end of cart class
 
