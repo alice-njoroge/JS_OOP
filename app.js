@@ -98,7 +98,6 @@ class Cart {
         });
         cartDom.innerHTML = htmlCartString;
     }
-
     openCart() {
         document.querySelector('.cart').classList.add('showCart');
         document.querySelector('.cart-overlay').classList.add('transparentBcg');
@@ -138,9 +137,7 @@ class Cart {
        if (cartItems){
            this.cartItems = JSON.parse(cartItems);
            cartArrLength.innerText = this.cartItems.length;
-           cartArrLength.addEventListener('click', event=>{
-               this.openCart();
-           })
+           this.cartUI();
        }
     }
     removeCartItem(productId){
@@ -161,6 +158,7 @@ class Cart {
       }
 
     }
+
 } // end of cart class
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -174,7 +172,9 @@ productsObj.getProducts().then(products => {
     cart.cartOverlay();
     cart.viewCartItems(products);
 });
-
+    cartArrLength.addEventListener('click', event=>{
+        cart.openCart();
+    });
 });
 
 
