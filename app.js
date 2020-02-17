@@ -67,14 +67,18 @@ class Cart {
             this.cartItems.push(product);
             localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
             cartArrLength.innerText = this.cartItems.length
-
         }
 
     }
 
     cartUI() {
         let cartItems = localStorage.getItem('cartItems');
-        this.cartItems = JSON.parse(cartItems);
+        if (cartItems){
+            this.cartItems = JSON.parse(cartItems);
+        }else{
+            this.cartItems = [];
+        }
+
 
         let htmlCartString = '';
         this.cartItems.map(product => {
@@ -83,7 +87,7 @@ class Cart {
             <div>
             <h4>${product.title} </h4>
         <h5>${product.price}</h5>
-        <span class="remove-item">remove</span>
+        <span data-id="${product.id}" class="remove-item">remove</span>
             </div>
             <div>
             <i class="fas fa-chevron-up"></i>
@@ -93,7 +97,6 @@ class Cart {
             </div>`;
         });
         cartDom.innerHTML = htmlCartString;
-
     }
 
     openCart() {
@@ -109,7 +112,11 @@ class Cart {
     cartOverlay() {
         document.querySelector('.cart-overlay').addEventListener('click', event => {
             if (event.target.classList.contains('cart-overlay') || event.target.classList.contains('fa-window-close')) {
-                this.closeCart();
+                this.closeCart()
+            }
+            if (event.target.classList.contains('remove-item')){
+                let productId = event.target.dataset.id;
+                this.removeCartItem(productId);
             }
         });
 
@@ -129,10 +136,24 @@ class Cart {
            cartArrLength.addEventListener('click', event=>{
                this.openCart();
            })
-
        }
     }
-    removeCartItem(){
+    removeCartItem(productId){
+      let cartItems = localStorage.getItem('cartItems');
+      if (cartItems){
+          this.cartItems = JSON.parse(cartItems);
+          console.log(this.cartItems);
+         if (this.cartItems.length === 1){
+             localStorage.removeItem("cartItems");
+             cartArrLength.innerText = 0;
+         }else{
+             let itemIndex =  this.cartItems.findIndex(item => productId === item.id);
+             this.cartItems.splice(itemIndex,1);
+             localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+             cartArrLength.innerText = this.cartItems.length;
+         }
+          this.cartUI();
+      }
 
     }
 } // end of cart class
