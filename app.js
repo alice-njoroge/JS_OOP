@@ -5,7 +5,6 @@ const cartArrLength = document.querySelector('.cart-items');
 const shopNow = document.querySelector('.shop-now');
 
 
-
 // products class get them from json and display them on the UI
 class Products {
     async getProducts() {
@@ -50,6 +49,7 @@ class Cart {
                 let productId = event.target.dataset.id;
                 let product = products.find(product => product.id === productId);
                 product['quantity'] = 1;
+                product['total'] = product.price;
                 this.putProductInStorage(product);
                 this.openCart();
                 this.cartUI();
@@ -74,9 +74,9 @@ class Cart {
 
     cartUI() {
         let cartItems = localStorage.getItem('cartItems');
-        if (cartItems){
+        if (cartItems) {
             this.cartItems = JSON.parse(cartItems);
-        }else{
+        } else {
             this.cartItems = [];
         }
 
@@ -87,7 +87,8 @@ class Cart {
             <img src="${product.image}" alt="${product.title}">
             <div>
             <h4>${product.title} </h4>
-        <h5>${product.price}</h5>
+        <h5>price: $${product.price}</h5>
+        <h5>total: $${product.total.toFixed(2)}</h5>
         <span data-id="${product.id}" class="remove-item">remove</span>
             </div>
             <div>
@@ -95,10 +96,13 @@ class Cart {
             <p class="item-amount">${product.quantity}</p>
             <i data-id="${product.id}" class="fas fa-chevron-down"></i>
             </div>
-            </div>`;
+            </div>
+            <hr>`;
+
         });
         cartDom.innerHTML = htmlCartString;
     }
+
     openCart() {
         document.querySelector('.cart').classList.add('showCart');
         document.querySelector('.cart-overlay').classList.add('transparentBcg');
@@ -114,87 +118,106 @@ class Cart {
             if (event.target.classList.contains('cart-overlay') || event.target.classList.contains('fa-window-close')) {
                 this.closeCart()
             }
-            if (event.target.classList.contains('remove-item')){
+            if (event.target.classList.contains('remove-item')) {
                 let productId = event.target.dataset.id;
                 this.removeCartItem(productId);
             }
-            if (event.target.classList.contains('clear-cart')){
+            if (event.target.classList.contains('clear-cart')) {
                 localStorage.removeItem("cartItems");
                 cartArrLength.innerText = 0;
                 this.cartUI();
             }
-            if (event.target.classList.contains('fa-chevron-up')){
+            if (event.target.classList.contains('fa-chevron-up')) {
                 let productId = event.target.dataset.id;
                 this.chevronUp(productId);
             }
-            if (event.target.classList.contains('fa-chevron-down')){
+            if (event.target.classList.contains('fa-chevron-down')) {
                 let productId = event.target.dataset.id;
                 this.chevronDown(productId);
             }
         });
 
     }
-    shopNow(){
-        shopNow.addEventListener('click', event=>{
-            productsDom.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    shopNow() {
+        shopNow.addEventListener('click', event => {
+            productsDom.scrollIntoView({behavior: 'smooth', block: 'center'});
 
         });
     }
-    // populate cart items on loading the browser
-    viewCartItems(products){
-        let cartItems = localStorage.getItem('cartItems');
-       if (cartItems){
-           this.cartItems = JSON.parse(cartItems);
-           cartArrLength.innerText = this.cartItems.length;
-           this.cartUI();
-       }
-    }
-    removeCartItem(productId){
-      let cartItems = localStorage.getItem('cartItems');
-      if (cartItems){
-          this.cartItems = JSON.parse(cartItems);
-          console.log(this.cartItems);
-         if (this.cartItems.length === 1){
-             localStorage.removeItem("cartItems");
-             cartArrLength.innerText = 0;
-         }else{
-             let itemIndex =  this.cartItems.findIndex(item => productId === item.id);
-             this.cartItems.splice(itemIndex,1);
-             localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
-             cartArrLength.innerText = this.cartItems.length;
-         }
-          this.cartUI();
-      }
 
-    }
-    chevronUp(productId){
+    // populate cart items on loading the browser
+    viewCartItems(products) {
         let cartItems = localStorage.getItem('cartItems');
-        if (cartItems){
+        if (cartItems) {
             this.cartItems = JSON.parse(cartItems);
-            const index=this.cartItems.findIndex(item => productId  === item.id);
-            console.log(index);
-            this.cartItems[index].quantity += 1;
-             localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
-             this.cartUI();
+            cartArrLength.innerText = this.cartItems.length;
+            this.cartUI();
+        }
+    }
+
+    removeCartItem(productId) {
+        let cartItems = localStorage.getItem('cartItems');
+        if (cartItems) {
+            this.cartItems = JSON.parse(cartItems);
+            console.log(this.cartItems);
+            if (this.cartItems.length === 1) {
+                localStorage.removeItem("cartItems");
+                cartArrLength.innerText = 0;
+            } else {
+                let itemIndex = this.cartItems.findIndex(item => productId === item.id);
+                this.cartItems.splice(itemIndex, 1);
+                localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+                cartArrLength.innerText = this.cartItems.length;
+            }
+            this.cartUI();
         }
 
     }
-    chevronDown(productId){
+
+    chevronUp(productId) {
         let cartItems = localStorage.getItem('cartItems');
-        if (cartItems){
+        if (cartItems) {
             this.cartItems = JSON.parse(cartItems);
-            const index=this.cartItems.findIndex(item => productId  === item.id);
+            const index = this.cartItems.findIndex(item => productId === item.id);
             console.log(index);
-            while (this.cartItems[index].quantity > 1){
+            this.cartItems[index].quantity += 1;
+            localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+            this.productTotal(productId);
+            this.cartUI();
+
+        }
+
+    }
+
+    chevronDown(productId) {
+        let cartItems = localStorage.getItem('cartItems');
+        if (cartItems) {
+            this.cartItems = JSON.parse(cartItems);
+            const index = this.cartItems.findIndex(item => productId === item.id);
+            console.log(index);
+            while (this.cartItems[index].quantity > 1) {
                 this.cartItems[index].quantity -= 1;
                 localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+                this.productTotal(productId);
                 this.cartUI();
+
             }
         }
 
     }
 
-    productTotal(){
+    productTotal(productId) {
+        let cartItems = localStorage.getItem('cartItems');
+        if (cartItems) {
+            this.cartItems = JSON.parse(cartItems);
+            let index = this.cartItems.findIndex(item => productId === item.id);
+            let quantity = this.cartItems[index].quantity;
+            let price = this.cartItems[index].price;
+            this.cartItems[index].total = quantity * price;
+
+            localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+        }
 
     }
 
@@ -202,16 +225,16 @@ class Cart {
 
 document.addEventListener('DOMContentLoaded', (event) => {
 
-const productsObj = new Products();
-const cart = new Cart();
-cart.shopNow();
-productsObj.getProducts().then(products => {
-    productsObj.displayProducts(products);
-    cart.bagButtons(products);
-    cart.cartOverlay();
-    cart.viewCartItems(products);
-});
-    cartArrLength.addEventListener('click', event=>{
+    const productsObj = new Products();
+    const cart = new Cart();
+    cart.shopNow();
+    productsObj.getProducts().then(products => {
+        productsObj.displayProducts(products);
+        cart.bagButtons(products);
+        cart.cartOverlay();
+        cart.viewCartItems(products);
+    });
+    cartArrLength.addEventListener('click', event => {
         cart.openCart();
     });
 });
