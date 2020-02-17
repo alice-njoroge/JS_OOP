@@ -118,6 +118,11 @@ class Cart {
                 let productId = event.target.dataset.id;
                 this.removeCartItem(productId);
             }
+            if (event.target.classList.contains('clear-cart')){
+                localStorage.removeItem("cartItems");
+                cartArrLength.innerText = 0;
+                this.cartUI();
+            }
         });
 
     }
