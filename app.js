@@ -126,8 +126,10 @@ class Cart {
             if (event.target.classList.contains('fa-chevron-up')){
                 let productId = event.target.dataset.id;
                 this.chevronUp(productId);
-
-
+            }
+            if (event.target.classList.contains('fa-chevron-down')){
+                let productId = event.target.dataset.id;
+                this.chevronDown(productId);
             }
         });
 
@@ -174,6 +176,20 @@ class Cart {
             this.cartItems[index].quantity += 1;
              localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
              this.cartUI();
+        }
+
+    }
+    chevronDown(productId){
+        let cartItems = localStorage.getItem('cartItems');
+        if (cartItems){
+            this.cartItems = JSON.parse(cartItems);
+            const index=this.cartItems.findIndex(item => productId  === item.id);
+            console.log(index);
+            while (this.cartItems[index].quantity > 1){
+                this.cartItems[index].quantity -= 1;
+                localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+                this.cartUI();
+            }
         }
 
     }
