@@ -49,6 +49,7 @@ class Cart {
                 button.innerText = "In bag";
                 let productId = event.target.dataset.id;
                 let product = products.find(product => product.id === productId);
+                product['quantity'] = 1;
                 this.putProductInStorage(product);
                 this.openCart();
                 this.cartUI();
@@ -90,9 +91,9 @@ class Cart {
         <span data-id="${product.id}" class="remove-item">remove</span>
             </div>
             <div>
-            <i class="fas fa-chevron-up"></i>
-            <p class="item-amount">4</p>
-            <i class="fas fa-chevron-down"></i>
+            <i data-id="${product.id}" class="fas fa-chevron-up"></i>
+            <p class="item-amount">${product.quantity}</p>
+            <i data-id="${product.id}" class="fas fa-chevron-down"></i>
             </div>
             </div>`;
         });
@@ -121,6 +122,12 @@ class Cart {
                 localStorage.removeItem("cartItems");
                 cartArrLength.innerText = 0;
                 this.cartUI();
+            }
+            if (event.target.classList.contains('fa-chevron-up')){
+                let productId = event.target.dataset.id;
+                this.chevronUp(productId);
+
+
             }
         });
 
@@ -156,6 +163,22 @@ class Cart {
          }
           this.cartUI();
       }
+
+    }
+    chevronUp(productId){
+        let cartItems = localStorage.getItem('cartItems');
+        if (cartItems){
+            this.cartItems = JSON.parse(cartItems);
+            const index=this.cartItems.findIndex(item => productId  === item.id);
+            console.log(index);
+            this.cartItems[index].quantity += 1;
+             localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+             this.cartUI();
+        }
+
+    }
+
+    productTotal(){
 
     }
 
