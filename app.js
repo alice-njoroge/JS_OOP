@@ -1,6 +1,9 @@
 //variables
 const productsDom = document.querySelector('.products-center');
 const cartDom = document.querySelector('.cart-content');
+const cartItems = document.querySelector('.cart-items');
+const shopNow = document.querySelector('.shop-now');
+
 
 
 // products class get them from json and display them on the UI
@@ -70,7 +73,6 @@ class Cart {
     cartUI() {
         let cartItems = localStorage.getItem('cartItems');
         this.cartItems = JSON.parse(cartItems);
-        console.log(this.cartItems);
 
         let htmlCartString = '';
         this.cartItems.map(product => {
@@ -107,14 +109,20 @@ class Cart {
             if (event.target.classList.contains('cart-overlay') || event.target.classList.contains('fa-window-close')) {
                 this.closeCart();
             }
-
         });
 
+    }
+    shopNow(){
+        shopNow.addEventListener('click', event=>{
+            productsDom.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        })
     }
 }
 
 const productsObj = new Products();
 const cart = new Cart();
+cart.shopNow();
 productsObj.getProducts().then(products => {
     productsObj.displayProducts(products);
     cart.bagButtons(products);
