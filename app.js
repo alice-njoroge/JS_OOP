@@ -1,7 +1,7 @@
 //variables
 const productsDom = document.querySelector('.products-center');
 const cartDom = document.querySelector('.cart-content');
-const cartItems = document.querySelector('.cart-items');
+const cartArrLength = document.querySelector('.cart-items');
 const shopNow = document.querySelector('.shop-now');
 
 
@@ -46,6 +46,7 @@ class Cart {
         let bagButtons = document.querySelectorAll('.bag-btn');
         bagButtons.forEach((button) => {
             button.addEventListener('click', event => {
+                button.innerText = "In bag";
                 let productId = event.target.dataset.id;
                 let product = products.find(product => product.id === productId);
                 this.putProductInStorage(product);
@@ -65,6 +66,7 @@ class Cart {
         if (!this.cartItems.find(item => item.id === product.id)) {
             this.cartItems.push(product);
             localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+            cartArrLength.innerText = this.cartItems.length
 
         }
 
@@ -116,9 +118,19 @@ class Cart {
         shopNow.addEventListener('click', event=>{
             productsDom.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-        })
+        });
     }
-}
+    // populate cart items on loading the browser
+    viewCartItems(products){
+        let cartItems = localStorage.getItem('cartItems');
+       if (cartItems){
+           this.cartItems = JSON.parse(cartItems);
+           cartArrLength.innerText = this.cartItems.length;
+       }
+    }
+} // end of cart class
+
+document.addEventListener('DOMContentLoaded', (event) => {
 
 const productsObj = new Products();
 const cart = new Cart();
@@ -127,6 +139,8 @@ productsObj.getProducts().then(products => {
     productsObj.displayProducts(products);
     cart.bagButtons(products);
     cart.cartOverlay();
+    cart.viewCartItems(products);
+});
 
 });
 
